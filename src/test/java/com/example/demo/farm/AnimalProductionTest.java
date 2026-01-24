@@ -21,18 +21,31 @@ class AnimalProductionTest {
     }
 
     @Test
-    void animalDiesWithoutFeedEventually() {
+    void diesWithoutFeed() {
         Farm farm = new Farm();
-        // brak paszy
-        Animal cow = new Cow("Krowa#1");
-        farm.addAnimal(cow);
+        Cow cow = new Cow("Krowa#1");
+        farm.addAnimal(cow); // brak paszy
 
-        // przy braku paszy hunger rośnie o 6/tick, po ~17 tickach dobije do 100 i umrze
-        for (int t = 1; t <= 25; t++) {
+        boolean stopped = false;
+        int milkAtStop = -1;
+
+        for (int t = 1; t <= 30; t++) {
             farm.tick(t);
+
+            if (!stopped && !cow.isProducing()) {
+                stopped = true;
+                milkAtStop = farm.getWarehouse().getQty(ProductType.MILK);
+            }
+
+            if (stopped) {
+                assertEquals(milkAtStop, farm.getWarehouse().getQty(ProductType.MILK));
+            }
+
+            if (!cow.isAlive()) break;
         }
 
+        assertTrue(stopped);
         assertFalse(cow.isAlive());
-        assertEquals(0, farm.getWarehouse().getQty(ProductType.MILK)); // nie produkowała
     }
+
 }

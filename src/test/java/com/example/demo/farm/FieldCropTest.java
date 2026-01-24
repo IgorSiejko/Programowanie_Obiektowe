@@ -26,7 +26,7 @@ class FieldCropTest {
             farm.tick(i + 1);
         }
 
-        // Dobijamy do dojrzałości (Wheat ma 18 ticksToMature, ale bonusy przyspieszają)
+        //  (Wheat ma 18 ticksToMature, ale bonusy przyspieszają)
         for (int t = 11; t <= 25; t++) {
             farm.tick(t);
         }
