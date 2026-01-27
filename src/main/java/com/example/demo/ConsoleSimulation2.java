@@ -3,8 +3,6 @@ package com.example.demo;
 import com.example.demo.farm.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList; // <--- NOWE (potrzebne do listy zapisu)
-import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleSimulation2 {
@@ -37,7 +35,6 @@ public class ConsoleSimulation2 {
                     11) Podlej pole
                     12) Nawóź pole
                     13) Zbierz plony
-                    14) Sprzedaj zwierzę
                     0) Wyjście
                     """);
 
@@ -78,7 +75,7 @@ public class ConsoleSimulation2 {
                         System.out.println("OK: zatrudniono");
                     }
 
-                    case "5" -> {
+                    case "5" -> { // fire by name (pierwszy znaleziony)
                         String name = ask(sc, "Imię pracownika do zwolnienia: ");
                         Worker w = findWorkerByName(farm, name);
                         if (w == null) System.out.println("Nie znaleziono pracownika: " + name);
@@ -88,7 +85,7 @@ public class ConsoleSimulation2 {
                         }
                     }
 
-                    case "6" -> {
+                    case "6" -> { // assign by name
                         String name = ask(sc, "Imię pracownika: ");
                         Worker w = findWorkerByName(farm, name);
                         if (w == null) {
@@ -137,7 +134,7 @@ public class ConsoleSimulation2 {
                         String cropName = ask(sc, "Roślina (wheat/corn): ").toLowerCase();
                         Crop crop = switch (cropName) {
                             case "wheat" -> new Wheat();
-                            // case "corn" -> new Corn(); // Odkomentuj jeśli masz klasę Corn
+
                             default -> throw new IllegalArgumentException("Nieznana roślina: " + cropName);
                         };
                         farm.getFieldById(id).plant(crop);
@@ -166,32 +163,6 @@ public class ConsoleSimulation2 {
                         System.out.println(ok ? "OK: zebrano" : "NIE: puste/niedojrzałe");
                     }
 
-                    case "14" -> {
-                        String name = ask(sc, "Imię zwierzęcia do sprzedania: ");
-                        Animal found = null;
-
-
-                        for(Animal a : farm.getAnimals()) {
-                            if(a.getName().equalsIgnoreCase(name)) {
-                                found = a;
-                                break;
-                            }
-                        }
-
-                        if (found == null) {
-                            System.out.println("Nie znaleziono zwierzęcia: " + name);
-                        } else {
-                            // Sprawdzamy, czy do sprzedania
-                            if (found instanceof Sellable) {
-                                farm.getWallet().sell((Sellable) found); // Sprzedajemy przez Wallet
-                                farm.getAnimals().remove(found); // Usuwamy z farmy fizycznie
-                                System.out.println("Zwierzę sprzedane i usunięte z farmy.");
-                            } else {
-                                System.out.println("Tego nie można sprzedać.");
-                            }
-                        }
-                    }
-
                     case "0" -> {
                         System.out.println("Koniec.");
                         return;
@@ -201,7 +172,6 @@ public class ConsoleSimulation2 {
                 }
             } catch (Exception e) {
                 System.out.println("Błąd: " + e.getMessage());
-                e.printStackTrace();
             }
         }
     }
