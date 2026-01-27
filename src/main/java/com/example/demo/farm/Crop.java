@@ -1,9 +1,5 @@
 package com.example.demo.farm;
 
-/**
- * Abstract base class representing a crop.
- * Handles growth stages and maturity logic.
- */
 public abstract class Crop {
     private final ProductType type;
     private final int ticksToMature;
@@ -12,12 +8,6 @@ public abstract class Crop {
     private int ageTicks = 0;
     private GrowthStage stage = GrowthStage.SEED;
 
-    /**
-     * Constructor for a generic crop.
-     * @param type The type of product this crop yields (e.g., WHEAT).
-     * @param ticksToMature How many game ticks it takes to reach maturity.
-     * @param yield How many items are harvested.
-     */
     protected Crop(ProductType type, int ticksToMature, int yield) {
         this.type = type;
         this.ticksToMature = Math.max(1, ticksToMature);
@@ -29,10 +19,6 @@ public abstract class Crop {
     public boolean isMature() { return stage == GrowthStage.MATURE; }
     public int getYield() { return yield; }
 
-    /**
-     * Advances the growth of the crop.
-     * @param deltaTicks Number of ticks to grow (can include bonuses).
-     */
     public void grow(int deltaTicks) {
         ageTicks += Math.max(1, deltaTicks);
 
