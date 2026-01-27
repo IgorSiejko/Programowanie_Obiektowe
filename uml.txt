@@ -1,0 +1,159 @@
+classDiagram
+    %% ---------------------------------------------------------
+    %% ENUMS
+    %% ---------------------------------------------------------
+    class Sector {
+        <<enumeration>>
+        ANIMALS
+        FIELDS
+        WAREHOUSE
+        IDLE
+    }
+
+    class ProductType {
+        <<enumeration>>
+        MILK
+        EGGS
+        WOOL
+        WHEAT
+        CORN
+    }
+
+    class GrowthStage {
+        <<enumeration>>
+        SEED
+        SPROUT
+        GROWING
+        MATURE
+    }
+
+    %% ---------------------------------------------------------
+    %% CLASSES
+    %% ---------------------------------------------------------
+    class GameClock {
+        -tickCount : long
+        +tick() void
+        +getTickCount() long
+    }
+
+    class Farm {
+        -workers : List~Worker~
+        -animals : List~Animal~
+        -fields : List~Field~
+        -wallet : Wallet
+        -inventory : Inventory
+        -warehouse : Warehouse
+        +tick() void
+        +hireWorker(w: Worker) void
+        +fireWorker(workerId: UUID) void
+        +assignWorker(workerId: UUID, sector: Sector) void
+        +addAnimal(a: Animal) void
+        +removeAnimal(animalId: UUID) void
+        +plant(fieldId: int, crop: Crop) void
+        +water(fieldId: int) void
+        +fertilize(fieldId: int) void
+        +harvest(fieldId: int) void
+    }
+
+    class Wallet {
+        -balance : double
+        +canAfford(amount: double) boolean
+        +withdraw(amount: double) boolean
+        +deposit(amount: double) void
+    }
+
+    class Inventory {
+        -feed : int
+        -water : int
+        -fertilizer : int
+        +consumeFeed(amount: int) boolean
+        +consumeWater(amount: int) boolean
+        +consumeFertilizer(amount: int) boolean
+    }
+
+    class Warehouse {
+        -products : Map~ProductType, Integer~
+        +add(type: ProductType, qty: int) void
+        +getQty(type: ProductType) int
+    }
+
+    class Worker {
+        -id : UUID
+        -name : String
+        -salary : double
+        -salaryIntervalTicks : int
+        -assignedSector : Sector
+        -lastPaidTick : long
+        +tick(farm: Farm, nowTick: long) void
+    }
+
+    class Animal {
+        <<abstract>>
+        -id : UUID
+        -name : String
+        -hunger : int
+        -health : int
+        -alive : boolean
+        -feedPerTick : int
+        -productIntervalTicks : int
+        -lastProductTick : long
+        +tick(farm: Farm, nowTick: long) void
+        #produce()* ProductType
+    }
+
+    class Field {
+        -id : int
+        -crop : Crop
+        -waterLevel : int
+        -fertilizerLevel : int
+        +isFree() boolean
+        +tick(farm: Farm, nowTick: long) void
+        +reset() void
+    }
+
+    class Crop {
+        <<abstract>>
+        -type : ProductType
+        -stage : GrowthStage
+        -ageTicks : int
+        -baseTicksToMature : int
+        +tick(waterBonus: int, fertBonus: int) void
+        +isMature() boolean
+        +getYield() int
+    }
+
+    %% Subclasses
+    class Cow
+    class Chicken
+    class Sheep
+    class Wheat
+    class Corn
+
+    %% ---------------------------------------------------------
+    %% RELATIONSHIPS
+    %% ---------------------------------------------------------
+    
+    %% Inheritance
+    Animal <|-- Cow
+    Animal <|-- Chicken
+    Animal <|-- Sheep
+    
+    Crop <|-- Wheat
+    Crop <|-- Corn
+
+    %% Composition / Aggregation structure from Farm
+    %% Using Composition (*--) as indicated by black diamonds in original UML or implicit ownership
+    Farm *-- "0..*" Worker
+    Farm *-- "0..*" Animal
+    Farm *-- "1..*" Field
+    
+    %% Associations / Parts of Farm
+    Farm --> Wallet
+    Farm --> Inventory
+    Farm --> Warehouse
+
+    %% Dependency
+    GameClock ..> Farm : calls tick()
+
+    %% Field contains Crop
+    Field o-- Crop
