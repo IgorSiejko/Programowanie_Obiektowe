@@ -6,7 +6,7 @@ public abstract class Animal {
     private final UUID id = UUID.randomUUID();
     private final String name;
 
-    private int hunger = 0;     // 0..100
+    private int hunger = 0;     // git 0..100
     private int health = 100;   // 0..100
     private boolean alive = true;
     private boolean producing = true;

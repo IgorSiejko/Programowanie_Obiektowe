@@ -5,6 +5,4 @@ public enum Sector {
     IDLE,
     ANIMALS,
     FIELDS,
-    WAREHOUSE
-
 }

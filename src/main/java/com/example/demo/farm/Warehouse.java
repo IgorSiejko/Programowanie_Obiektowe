@@ -18,4 +18,8 @@ public class Warehouse {
     public Map<ProductType, Integer> snapshot() {
         return new EnumMap<>(products);
     }
+
+    public void clear() {
+        products.clear();
+    }
 }
